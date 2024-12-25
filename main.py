@@ -1,12 +1,13 @@
 import pygame
 from pygame.locals import *
+import numpy as np
 
 
 class App:
     def __init__(self):
         self._running = True
         self._display_surf = None
-        self.size = self.weight, self.height = 640, 400
+        self.size = self.weight, self.height = 900, 900
 
     def on_init(self):
         pygame.init()
@@ -20,12 +21,27 @@ class App:
     def on_loop(self):
         pass
 
+    def draw_figure(self, surface, figure, center):
+        vertices = figure + center
+        pygame.draw.polygon(surface, (0, 255, 0), vertices)
+
     def on_render(self):
         self._display_surf.fill((0, 0, 0))
-        start_point = (self.weight//2, self.height//2)
-        end_point = (start_point[0] + 50, start_point[1])
-        pygame.draw.line(self._display_surf, (255, 0, 0), start_point, end_point, 5)
+
+        width = 100
+        height = 50
+        rectangle = np.array([
+            [width / 2, height / 2],
+            [-width / 2, height / 2],
+            [-width / 2, -height / 2],
+            [width / 2, -height / 2]
+        ])
+        center = np.array([self.weight // 2, self.height // 2])
+
+        self.draw_figure(self._display_surf, rectangle, center)
         pygame.display.flip()
+
+
 
     def on_cleanup(self):
         pygame.quit()
