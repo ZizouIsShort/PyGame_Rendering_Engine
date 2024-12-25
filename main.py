@@ -22,8 +22,9 @@ class App:
 
     def on_render(self):
         self._display_surf.fill((0, 0, 0))
-        center = (self.weight//2, self.height//2)
-        pygame.draw.circle(self._display_surf, (255, 0, 0), center, 1)
+        start_point = (self.weight//2, self.height//2)
+        end_point = (start_point[0] + 50, start_point[1])
+        pygame.draw.line(self._display_surf, (255, 0, 0), start_point, end_point, 5)
         pygame.display.flip()
 
     def on_cleanup(self):
