@@ -8,18 +8,26 @@ class App:
         self._running = True
         self._display_surf = None
         self.size = self.weight, self.height = 900, 900
+        self.angle = 0
+        self.rotation_speed = 2
 
     def on_init(self):
         pygame.init()
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
+        self.clock = pygame.time.Clock()
 
     def on_event(self, event):
         if event.type == pygame.QUIT:
             self._running = False
 
     def on_loop(self):
-        pass
+        self.angle = (self.angle + self.rotation_speed) % 360
+
+    def rotate_points(self, points, angle_degrees):
+        angle = np.radians(angle_degrees)
+        rotation_matrix = np.array([[np.cos(angle), -np.sin(angle)], [np.sin(angle), np.cos(angle)]])
+        return np.dot(points, rotation_matrix)
 
     def draw_figure(self, surface, figure, center):
         vertices = figure + center
@@ -36,10 +44,14 @@ class App:
             [-width / 2, -height / 2],
             [width / 2, -height / 2]
         ])
+        rotated_rectangle = self.rotate_points(rectangle, self.angle)
+
         center = np.array([self.weight // 2, self.height // 2])
 
-        self.draw_figure(self._display_surf, rectangle, center)
+        self.draw_figure(self._display_surf, rotated_rectangle, center)
         pygame.display.flip()
+
+        self.clock.tick(144)
 
 
 
